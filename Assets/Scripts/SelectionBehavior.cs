@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SelectionBehavior : MonoBehaviour
 {
@@ -101,7 +102,7 @@ public class SelectionBehavior : MonoBehaviour
 
 	public void Select()
 	{
-		checkOtherLayers ();
+		//checkOtherLayers ();
 		activateNextLevel ();
 	}
 
@@ -112,8 +113,29 @@ public class SelectionBehavior : MonoBehaviour
 
 	void activateNextLevel()
 	{
-		for (int i = 0; i < transform.childCount; i++)
-			transform.GetChild (i).gameObject.SetActive (true);
+		GameObject g = GameObject.Find ("Plane");
+		//for (int i = 0; i < transform.childCount; i++)
+			//transform.GetChild (i).gameObject.SetActive (true);
+		Debug.Log(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Count);
+		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild)
+		{
+			GameObject parent = kvp.Key;
+			List<GameObject> children = kvp.Value;
+
+			for(int i = 0; i < children.Count; i++)
+			{
+				Debug.Log(parent.name + " -> " + children[i].name);
+			}            
+
+		}
+		if (g.GetComponent<ParentToChild>().parentToChild.ContainsKey(GameObject.Find("Top")))
+			Debug.Log ("hihihihihi");
+		else
+			Debug.Log("Not found");
+
+		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[GameObject.Find("Main Menu")].Count; i++)
+			g.GetComponent<ParentToChild>().parentToChild[GameObject.Find("Main Menu")][i].SetActive (true);
+
 		activated = true;
 	}
 

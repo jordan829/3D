@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class ParentToChild : MonoBehaviour
 {
-	public static Dictionary<GameObject, List<GameObject>> parentToChild;
+	public Dictionary<GameObject, List<GameObject>> parentToChild;
 
 	void Start ()
     {

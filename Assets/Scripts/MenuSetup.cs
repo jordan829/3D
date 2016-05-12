@@ -17,7 +17,7 @@ public class MenuSetup : MonoBehaviour
 
 	public void deactivateAll()
 	{
-		Dictionary<GameObject, List<GameObject>>.KeyCollection keyColl = ParentToChild.parentToChild.Keys;
+		Dictionary<GameObject, List<GameObject>>.KeyCollection keyColl = GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Keys;
 		foreach (GameObject g in keyColl) {
 			Debug.Log (g.name);
 			if(g.name != "Top")
@@ -37,10 +37,11 @@ public class MenuSetup : MonoBehaviour
 			// Reactivate first level
 			transform.GetChild (i).gameObject.SetActive (true);
 		}*/
+		GameObject g = GameObject.Find ("Plane");
 		deactivateAll ();
-		for(int i = 0; i < ParentToChild.parentToChild[GameObject.Find("Top")].Count; i ++){
+		for(int i = 0; i < g.GetComponent<ParentToChild>().parentToChild[GameObject.Find("Top")].Count; i ++){
 			//Debug.Log (ParentToChild.parentToChild [GameObject.Find("Top")] [i]);
-			(ParentToChild.parentToChild [GameObject.Find("Top")] [i]).SetActive (true);
+			(g.GetComponent<ParentToChild>().parentToChild [GameObject.Find("Top")] [i]).SetActive (true);
 		}
 }
 }

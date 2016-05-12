@@ -44,7 +44,7 @@ public class XMLReader : MonoBehaviour
         layers = new Stack<string>();
         TextAsset xmlText = Resources.Load("menu") as TextAsset;
         XmlTextReader reader = new XmlTextReader(new StringReader(xmlText.text));
-        ptc = GameObject.Find("Hierarchy").GetComponent<ParentToChild>();
+        ptc = GameObject.Find("Plane").GetComponent<ParentToChild>();
         topTitle = "";
         doneParsing = false;
         curElement = "";
@@ -58,7 +58,8 @@ public class XMLReader : MonoBehaviour
 	
 	void Update ()
     {
-	    
+		//GameObject.Find("Main Menu").GetComponent<SelectionBehavior>().Select();
+
 	}
 
     void parseXML(XmlTextReader reader)

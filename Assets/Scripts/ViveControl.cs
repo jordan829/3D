@@ -115,6 +115,12 @@ public class ViveControl : MonoBehaviour
 		}
 	}
 
+	void OnTriggerEnter(Collider collide)
+	{
+		if (collide.transform.tag == "MenuItem") 
+			controller.TriggerHapticPulse (3000);	//NOTE: make stronger
+	}
+
     void shrinkAll()
     {
         GameObject[] colors = GameObject.FindGameObjectsWithTag("Color");
