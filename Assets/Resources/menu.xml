@@ -1,0 +1,26 @@
+<menu>
+  <title>Top</title>
+  <folder>
+    <title>Main Menu</title>
+    <folder>
+    	<title>Programs</title>
+    	<folder><title>Music</title> </folder>
+    	<folder><title>Photos</title> </folder>
+    	<folder><title>Internet</title> </folder>
+    </folder>
+    <folder><title>Files</title></folder>
+    <folder><title>Users</title></folder>
+  </folder>
+  <folder>
+    <title>Settings</title>
+    <folder><title>System</title> </folder>
+    <folder><title>Devices</title></folder>
+    <folder><title>Network</title></folder>
+  </folder>
+  <folder>
+    <title>Power</title>
+    <folder><title>Shut Down</title> </folder>
+    <folder><title>Sleep</title></folder>
+    <folder><title>Start</title></folder>
+  </folder>
+</menu>
