@@ -29,3 +29,5 @@ issue of not being able to find a gameobject using GameObject.Find("Name") for a
 ParentToChild.cs has been deactivated on "Hierarchy" and placed on the "Plane" gameobject. There was an issue with the dictionary 
 getting cleared after XMLReader.Start() when attached to "Hierarchy". If someone can figure out why the dictionary is not persistent 
 when attached to "Hierarchy", feel free to revert this change.
+
+Update (Payam): Did something change that affects ray casting? I cant get ray casts to work. Added the color picker and you can move it around now.

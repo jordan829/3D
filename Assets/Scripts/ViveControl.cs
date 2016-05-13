@@ -66,6 +66,7 @@ public class ViveControl : MonoBehaviour
 
                 if (hit.transform.tag == "Color")
                 {
+					Debug.Log ("hit color");
                     shrinkAll();
                     hit.transform.gameObject.GetComponent<ColorProperty>().Enlarge();
                 }
@@ -111,6 +112,19 @@ public class ViveControl : MonoBehaviour
 			if (controller.GetPressDown (trigger)) 
 			{
 				collide.gameObject.GetComponent<SelectionBehavior>().Select();
+			}
+		}
+
+		if (collide.transform.tag == "ColorHandle")
+		{
+			if (controller.GetPressDown (grip))
+			{
+				collide.transform.parent = transform;
+			}
+
+			if (controller.GetPressUp (grip))
+			{
+				collide.transform.parent = null;
 			}
 		}
 	}

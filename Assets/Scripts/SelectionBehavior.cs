@@ -114,9 +114,12 @@ public class SelectionBehavior : MonoBehaviour
 	void activateNextLevel()
 	{
 		GameObject g = GameObject.Find ("Plane");
+
 		//for (int i = 0; i < transform.childCount; i++)
 			//transform.GetChild (i).gameObject.SetActive (true);
+
 		Debug.Log(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Count);
+
 		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild)
 		{
 			GameObject parent = kvp.Key;
@@ -128,6 +131,7 @@ public class SelectionBehavior : MonoBehaviour
 			}            
 
 		}
+
 		if (g.GetComponent<ParentToChild>().parentToChild.ContainsKey(GameObject.Find("Top")))
 			Debug.Log ("hihihihihi");
 		else

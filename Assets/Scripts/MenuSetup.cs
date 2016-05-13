@@ -43,5 +43,9 @@ public class MenuSetup : MonoBehaviour
 			//Debug.Log (ParentToChild.parentToChild [GameObject.Find("Top")] [i]);
 			(g.GetComponent<ParentToChild>().parentToChild [GameObject.Find("Top")] [i]).SetActive (true);
 		}
-}
+
+		GameObject top = GameObject.Find ("Top");
+		if(top != null)
+			GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 30.0f);
+	}
 }
