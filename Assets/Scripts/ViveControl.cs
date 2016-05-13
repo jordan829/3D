@@ -34,13 +34,14 @@ public class ViveControl : MonoBehaviour
             return;
         }
 
-		if (controller.GetPress (grip))
+		if (controller.GetPressUp (grip))
 		{
-			
+			GameObject.Find ("ColorPicker").transform.parent = null;
 		}
 
         if (controller.GetPress (trigger))
         {
+			Debug.Log (GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Count);
             LineRenderer laser = GetComponent<LineRenderer>();
             Vector3[] laserPoints = new Vector3[2];
             laser.SetColors(Color.blue, Color.green);
@@ -52,6 +53,7 @@ public class ViveControl : MonoBehaviour
 			RaycastHit hit;
 			if (Physics.Raycast (transform.position, transform.forward, out hit))
 			{
+				Debug.Log ("raycast");
                 if (hit.transform.tag == "MenuItem")
                 {
                     if (!rayHitMenu)
@@ -121,13 +123,9 @@ public class ViveControl : MonoBehaviour
 			{
 				collide.transform.parent = transform;
 			}
-
-			if (controller.GetPressUp (grip))
-			{
-				collide.transform.parent = null;
-			}
 		}
 	}
+
 
 	void OnTriggerEnter(Collider collide)
 	{

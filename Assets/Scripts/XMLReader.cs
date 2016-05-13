@@ -53,7 +53,7 @@ public class XMLReader : MonoBehaviour
         //ptc.PrintDictionary();
 		ptc.assignLayers(GameObject.Find(topTitle));
         //printLayers();
-		GameObject.Find("Top").GetComponent<MenuSetup>().setUp();
+		//GameObject.Find("Top").GetComponent<MenuSetup>().setUp();
 	}
 	
 	void Update ()

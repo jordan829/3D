@@ -4,11 +4,11 @@ using System.Collections.Generic;
 
 public class ParentToChild : MonoBehaviour
 {
-	public Dictionary<GameObject, List<GameObject>> parentToChild;
+	public Dictionary<GameObject, List<GameObject>> parentToChild = new Dictionary<GameObject, List<GameObject>>();
 
 	void Start ()
     {
-        parentToChild = new Dictionary<GameObject, List<GameObject>>();
+        //parentToChild = new Dictionary<GameObject, List<GameObject>>();
 	}
 	
 	void Update ()
@@ -18,8 +18,8 @@ public class ParentToChild : MonoBehaviour
 
     public void AddPath(GameObject parent, GameObject child)
     {
-		if (parentToChild == null)
-			parentToChild = new Dictionary<GameObject, List<GameObject>>();
+		//if (parentToChild == null)
+		//	parentToChild = new Dictionary<GameObject, List<GameObject>>();
 		
         if (parentToChild.ContainsKey(parent))
         {
