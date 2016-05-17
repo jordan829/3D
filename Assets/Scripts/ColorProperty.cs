@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class ColorProperty : MonoBehaviour
 {
@@ -31,10 +32,29 @@ public class ColorProperty : MonoBehaviour
 
     public void ChangeMenuColors()
     {
-        GameObject[] menus = GameObject.FindGameObjectsWithTag("MenuItem");
-        GameObject[] texts = GameObject.FindGameObjectsWithTag("Text");
+        //GameObject[] menus = GameObject.FindGameObjectsWithTag("MenuItem");
+        //GameObject[] texts = GameObject.FindGameObjectsWithTag("Text");
+		List<GameObject> menus = new List<GameObject> ();
+		List<GameObject> texts = new List<GameObject>();
 
-        foreach (GameObject m in menus)
+		foreach (KeyValuePair<GameObject, int> kvp in GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap)
+		{
+			GameObject g = kvp.Key;
+			g.GetComponent<Renderer> ().material = colorMat;
+
+			for (int i = 0; i < g.transform.childCount; i++)
+			{
+				GameObject child = g.transform.GetChild (i).gameObject;
+
+				if (this.gameObject.name == "WhiteColor")
+					child.GetComponent<TextMesh>().color = Color.black;
+				else
+					child.GetComponent<TextMesh>().color = Color.white;
+			}
+		}
+
+
+        /*foreach (GameObject m in menus)
         {
             m.GetComponent<Renderer>().material = colorMat;
         }
@@ -45,7 +65,7 @@ public class ColorProperty : MonoBehaviour
                 t.GetComponent<TextMesh>().color = Color.black;
             else
                 t.GetComponent<TextMesh>().color = Color.white;
-        }
+        }*/
 
         
     }

@@ -8,19 +8,64 @@
     	<folder><title>Photos</title> </folder>
     	<folder><title>Internet</title> </folder>
     </folder>
-    <folder><title>Files</title></folder>
-    <folder><title>Users</title></folder>
+    <folder>
+    	<title>Files</title>
+    	<folder><title>Computer</title> </folder>
+    	<folder><title>Desktop</title> </folder>
+    	<folder><title>Downloads</title> </folder>
+    </folder>
+    <folder>
+	    <title>Users</title>
+	    <folder>
+	    	<title>Accounts</title>
+	    	<folder><title>Admin</title> </folder>
+    		<folder><title>Create</title> </folder>
+    		<folder><title>Delete</title> </folder>
+	    </folder>
+    	<folder>
+    		<title>Calendar</title>
+    		<folder><title>Today</title> </folder>
+    		<folder><title>Month</title> </folder>
+    		<folder><title>New Event</title> </folder>
+    	</folder>
+    	<folder>
+    		<title>Email</title>
+    		<folder><title>Gmail</title> </folder>
+    		<folder><title>Yahoo</title> </folder>
+    		<folder><title>Hotmail</title> </folder>
+    		</folder>
+    </folder>
   </folder>
   <folder>
     <title>Settings</title>
-    <folder><title>System</title> </folder>
-    <folder><title>Devices</title></folder>
-    <folder><title>Network</title></folder>
+    <folder>
+    	<title>Network</title>
+    	<folder><title>WiFi</title> </folder>
+    	<folder><title>Airplane</title> </folder>
+    	<folder><title>VPN</title> </folder>
+    </folder>
+    <folder>
+    	<title>Devices</title>
+    	<folder><title>Bluetooth</title> </folder>
+    	<folder><title>Printers</title> </folder>
+    	<folder>
+    		<title>Widgets</title>
+    		<folder><title>Color Palette</title> </folder>
+    		<folder><title>Widget 2</title> </folder>
+    		<folder><title>Widget 3</title> </folder>
+    	</folder>
+    </folder>
+    <folder>
+    	<title>System</title>
+    	<folder><title>Display</title> </folder>
+    	<folder><title>Privacy</title> </folder>
+    	<folder><title>Time</title> </folder>
+    	</folder>
   </folder>
   <folder>
     <title>Power</title>
-    <folder><title>Shut Down</title> </folder>
+    <folder><title>Restart</title> </folder>
     <folder><title>Sleep</title></folder>
-    <folder><title>Start</title></folder>
+    <folder><title>Shut Down</title></folder>
   </folder>
 </menu>

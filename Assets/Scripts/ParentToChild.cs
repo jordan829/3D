@@ -26,6 +26,7 @@ public class ParentToChild : MonoBehaviour
                 list.Add(child);
             }
         }
+
         else
         {
             List<GameObject> list = new List<GameObject>();
@@ -33,6 +34,7 @@ public class ParentToChild : MonoBehaviour
             parentToChild.Add(parent, list);
 
         }
+
 		if(!parentToChild.ContainsKey(child)){
 			List<GameObject> list1 = new List<GameObject>();
 			parentToChild.Add (child, list1);
@@ -54,7 +56,7 @@ public class ParentToChild : MonoBehaviour
         }
     }
 
-    public void assignLayers(GameObject root)
+    /*public void assignLayers(GameObject root)
     {
         if (parentToChild.ContainsKey(root))
         {
@@ -63,10 +65,9 @@ public class ParentToChild : MonoBehaviour
             for (int i = 0; i < rootList.Count; i++)
             {
                 GameObject curChild = rootList[i];
-                //GameObject curChild = GameObject.Find(curChildName);
                 curChild.GetComponent<SelectionBehavior>().incrLevel(root);
                 assignLayers(curChild);
             }
         }
-    }
+    }*/
 }

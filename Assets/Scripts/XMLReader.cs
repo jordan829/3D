@@ -57,12 +57,7 @@ public class XMLReader : MonoBehaviour
 	
 	void Update ()
     {
-		//GameObject.Find("Main Menu").GetComponent<SelectionBehavior>().Select();
 
-		if (Input.GetKey (KeyCode.Alpha0))
-		{
-			printLayers ();
-		}
 	}
 
     void parseXML(XmlTextReader reader)

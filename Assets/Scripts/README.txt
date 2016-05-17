@@ -29,3 +29,11 @@ issue of not being able to find a gameobject using GameObject.Find("Name") for a
 ParentToChild.cs has been deactivated on "Hierarchy" and placed on the "Plane" gameobject. There was an issue with the dictionary 
 getting cleared after XMLReader.Start() when attached to "Hierarchy". If someone can figure out why the dictionary is not persistent 
 when attached to "Hierarchy", feel free to revert this change.
+
+5-17-16:
+Menu heirarchy works. I added more stuff to it. Now, the menu you are in is enlarged so you know where you are. You can click on an item
+(to enlarge it) then touch the touchpad to trigger its action. These are located in SelectionBehavior.
+
+To test these and see how it works, try clicking on "Color Palette" or "Shut Down" (we can add more functionality as we go).
+
+- Payam

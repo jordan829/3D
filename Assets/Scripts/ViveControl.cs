@@ -41,7 +41,6 @@ public class ViveControl : MonoBehaviour
 
         if (controller.GetPress (trigger))
         {
-			Debug.Log (GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Count);
             LineRenderer laser = GetComponent<LineRenderer>();
             Vector3[] laserPoints = new Vector3[2];
             laser.SetColors(Color.blue, Color.green);
@@ -53,12 +52,10 @@ public class ViveControl : MonoBehaviour
 			RaycastHit hit;
 			if (Physics.Raycast (transform.position, transform.forward, out hit))
 			{
-				Debug.Log ("raycast");
                 if (hit.transform.tag == "MenuItem")
                 {
                     if (!rayHitMenu)
                     {
-                        //hit.transform.gameObject.GetComponent<SelectionBehavior>().Flip();
                         rayHitMenu = true;
                     }
                 }
@@ -105,6 +102,14 @@ public class ViveControl : MonoBehaviour
                 }
             }
         }
+
+
+
+		if (controller.GetTouchDown (touchpad))
+		{
+			Vector3 delta = GameObject.Find ("ColorPicker").transform.position - controller.transform.pos;
+			Debug.Log ("Pos: " + delta);
+		}
     }
 
 	void OnTriggerStay(Collider collide)
@@ -114,6 +119,11 @@ public class ViveControl : MonoBehaviour
 			if (controller.GetPressDown (trigger)) 
 			{
 				collide.gameObject.GetComponent<SelectionBehavior>().Select();
+			}
+
+			if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			{
+				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
 			}
 		}
 
@@ -130,7 +140,9 @@ public class ViveControl : MonoBehaviour
 	void OnTriggerEnter(Collider collide)
 	{
 		if (collide.transform.tag == "MenuItem") 
+		{
 			controller.TriggerHapticPulse (3000);	//NOTE: make stronger
+		}
 	}
 
     void shrinkAll()

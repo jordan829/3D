@@ -45,7 +45,11 @@ public class MenuSetup : MonoBehaviour
 		}
 
 		GameObject top = GameObject.Find ("Top");
-		if(top != null)
-			GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 30.0f);
+
+		if (top != null) 
+		{
+			//GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 30.0f);
+			GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 25.0f);
+		}
 	}
 }

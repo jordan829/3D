@@ -6,13 +6,17 @@ public class SelectionBehavior : MonoBehaviour
 {
 	public bool activated;
 	public int layer;
-    XMLReader xmlr;
+	XMLReader xmlr;
+	Vector3 defaultScale;
+	public Vector3 enlargedScale;
 
 	void Start ()
 	{
 		layer = 0;
 		activated = false;
         xmlr = GameObject.Find("ReadXML").GetComponent<XMLReader>();
+		defaultScale = this.transform.localScale;
+		enlargedScale = 1.25f * defaultScale;
 	}
 
 	void Update ()
@@ -28,16 +32,15 @@ public class SelectionBehavior : MonoBehaviour
 	public int Layer
 	{
 		get { return layer; }
-		set { Debug.Log ("Set " + this.gameObject.name + " to: " + value); layer = value; }
+		set { layer = value; }
 	}
-
-	public void incrLevel(GameObject parent)
-    {
-		if (parent.transform.name == "Top")
-            layer = 1;
-        else
-			layer = parent.GetComponent<SelectionBehavior>().Layer + 1;
-    }
+		
+	public void Select()
+	{
+		checkOtherLayers ();
+		this.transform.localScale = enlargedScale;
+		activateNextLevel ();
+	}
 
 	public void checkOtherLayers()
 	{
@@ -48,61 +51,14 @@ public class SelectionBehavior : MonoBehaviour
 
 			if (i > GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap[this.gameObject])
 				g.SetActive (false);
+
+			if(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.ContainsKey(g))
+			{
+				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains(this.gameObject))
+					g.transform.localScale = defaultScale;
+			}
+			//g.transform.localScale = defaultScale;
 		}
-	}
-
-    public void SmartFlip()
-    {
-        NextLayersOff();
-        checkOtherLayers();
-        activateNextLevel();
-    }
-
-    public void NextLayersOff()
-    {
-        GameObject[] menus = GameObject.FindGameObjectsWithTag("MenuItem");
-
-        foreach(GameObject m in menus)
-        {
-            int curLayer = m.GetComponent<SelectionBehavior>().Layer;
-            Debug.Log(m.name + ", " + curLayer);
-            if(curLayer > this.layer)
-            {
-                m.SetActive(false);
-
-                for(int i = 0; i < m.transform.childCount; i++)
-                {
-                    m.transform.GetChild(i).gameObject.SetActive(false);
-                }
-            }
-        }
-    }
-
-	public void Flip()
-	{
-        foreach(GameObject m in GameObject.FindGameObjectsWithTag("MenuItem"))
-        {
-            if(m.GetComponent<SelectionBehavior>().layer == this.layer)
-            {
-                m.GetComponent<SelectionBehavior>().deactivateNextLevel();
-            }
-        }
-
-		if (activated)
-			Deselect ();
-		else
-			Select ();
-	}
-
-	public void Select()
-	{
-		checkOtherLayers ();
-		activateNextLevel ();
-	}
-
-	public void Deselect()
-	{
-		deactivateNextLevel ();
 	}
 
 	void activateNextLevel()
@@ -127,21 +83,26 @@ public class SelectionBehavior : MonoBehaviour
 		activated = true;
 	}
 
-	void deactivateNextLevel()
+	public void action(Vector3 controllerPos)
 	{
-		for (int i = 0; i < transform.childCount; i++)
+		switch (this.gameObject.name)
 		{
-			if(!transform.GetChild(i).gameObject.name.Contains("Text"))
-				transform.GetChild (i).gameObject.SetActive (false);
+			case "Shut Down":
+				UnityEditor.EditorApplication.isPlaying = false;
+				break;
+			case "Color Palette":
+				GameObject.Find ("ColorPicker").transform.position = controllerPos + new Vector3 (0.15f, 0.3f, 0.2f);
+				break;
+			default:
+				break;
 		}
-
-		activated = false;
 	}
 
-	void deactivateCurrentLevel()
-	{
-		for (int i = 0; i < transform.parent.transform.childCount; i++)
-			transform.parent.transform.GetChild (i).gameObject.SetActive (false);
-		activated = false;
-	}
+	/*public void incrLevel(GameObject parent)
+    {
+		if (parent.transform.name == "Top")
+            layer = 1;
+        else
+			layer = parent.GetComponent<SelectionBehavior>().Layer + 1;
+    }*/
 }
