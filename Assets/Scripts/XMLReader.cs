@@ -14,6 +14,8 @@ public class XMLReader : MonoBehaviour
     public string topTitle;
     public bool doneParsing;
     ParentToChild ptc;
+	int lay = 0;
+	public Dictionary<GameObject, int> layerMap = new Dictionary<GameObject, int>();
 
     public class MenuItem
     {
@@ -50,16 +52,17 @@ public class XMLReader : MonoBehaviour
         curElement = "";
         parseXML(reader);
         randomPlace();
-        //ptc.PrintDictionary();
-		ptc.assignLayers(GameObject.Find(topTitle));
-        //printLayers();
-		//GameObject.Find("Top").GetComponent<MenuSetup>().setUp();
+		GameObject.Find("Top").GetComponent<MenuSetup>().setUp();
 	}
 	
 	void Update ()
     {
 		//GameObject.Find("Main Menu").GetComponent<SelectionBehavior>().Select();
 
+		if (Input.GetKey (KeyCode.Alpha0))
+		{
+			printLayers ();
+		}
 	}
 
     void parseXML(XmlTextReader reader)
@@ -85,6 +88,7 @@ public class XMLReader : MonoBehaviour
 
                     if (curElement == "folder")
                     {
+						lay += 1;
                         reader.ReadToFollowing("title");
                         reader.Read();
                         string selfName = reader.Value;
@@ -93,6 +97,8 @@ public class XMLReader : MonoBehaviour
 							Debug.Log ("null");
                         menu = Instantiate (menuItem) as GameObject;
                         menu.name = selfName;
+						menu.GetComponent<SelectionBehavior> ().Layer = lay;
+						layerMap [menu] = lay;
                         ptc.AddPath(parent, menu);
                         layers.Push(reader.Value);
                     }
@@ -106,6 +112,8 @@ public class XMLReader : MonoBehaviour
                     curElement = reader.Name;
                     if (curElement != "title")
                         layers.Pop();
+					if(curElement == "folder")
+						lay -= 1;
                     break;
             }
         }
@@ -122,11 +130,13 @@ public class XMLReader : MonoBehaviour
         }
     }
 
-    public void printLayers()
-    {
-        foreach(GameObject g in GameObject.FindGameObjectsWithTag("MenuItem"))
-        {
-            Debug.Log(g + ": " + g.GetComponent<SelectionBehavior>().Layer);
-        }
-    }
+	public void printLayers()
+	{
+		foreach (KeyValuePair<GameObject, int> kvp in layerMap)
+		{
+			GameObject g = kvp.Key;
+			int i = kvp.Value;
+			Debug.Log(g.name + ": " + i);
+		}
+	}
 }

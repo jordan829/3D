@@ -8,7 +8,6 @@ public class ParentToChild : MonoBehaviour
 
 	void Start ()
     {
-        //parentToChild = new Dictionary<GameObject, List<GameObject>>();
 	}
 	
 	void Update ()
@@ -18,9 +17,6 @@ public class ParentToChild : MonoBehaviour
 
     public void AddPath(GameObject parent, GameObject child)
     {
-		//if (parentToChild == null)
-		//	parentToChild = new Dictionary<GameObject, List<GameObject>>();
-		
         if (parentToChild.ContainsKey(parent))
         {
 			List<GameObject> list = parentToChild[parent];
@@ -41,7 +37,6 @@ public class ParentToChild : MonoBehaviour
 			List<GameObject> list1 = new List<GameObject>();
 			parentToChild.Add (child, list1);
 		}
-			
     }
 
     public void PrintDictionary()

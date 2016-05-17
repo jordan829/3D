@@ -28,6 +28,7 @@ public class SelectionBehavior : MonoBehaviour
 	public int Layer
 	{
 		get { return layer; }
+		set { Debug.Log ("Set " + this.gameObject.name + " to: " + value); layer = value; }
 	}
 
 	public void incrLevel(GameObject parent)
@@ -38,22 +39,15 @@ public class SelectionBehavior : MonoBehaviour
 			layer = parent.GetComponent<SelectionBehavior>().Layer + 1;
     }
 
-    /* !! Everything below is obsolete !!
-     * They may or may not work now, better to rethink these methods using the new data structures.
-     */
-
 	public void checkOtherLayers()
 	{
-		GameObject[] menus = GameObject.FindGameObjectsWithTag ("MenuItem");
-
-		foreach (GameObject m in menus)
+		foreach (KeyValuePair<GameObject, int> kvp in GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap)
 		{
-			SelectionBehavior msb = m.GetComponent<SelectionBehavior> ();
+			GameObject g = kvp.Key;
+			int i = kvp.Value;
 
-			if (msb.Activated && (msb.Layer > this.layer))// && m.transform.childCount <= 4)
-			{
-				msb.deactivateNextLevel ();
-			}
+			if (i > GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap[this.gameObject])
+				g.SetActive (false);
 		}
 	}
 
@@ -102,7 +96,7 @@ public class SelectionBehavior : MonoBehaviour
 
 	public void Select()
 	{
-		//checkOtherLayers ();
+		checkOtherLayers ();
 		activateNextLevel ();
 	}
 
@@ -114,11 +108,6 @@ public class SelectionBehavior : MonoBehaviour
 	void activateNextLevel()
 	{
 		GameObject g = GameObject.Find ("Plane");
-
-		//for (int i = 0; i < transform.childCount; i++)
-			//transform.GetChild (i).gameObject.SetActive (true);
-
-		Debug.Log(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Count);
 
 		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild)
 		{
@@ -132,13 +121,8 @@ public class SelectionBehavior : MonoBehaviour
 
 		}
 
-		if (g.GetComponent<ParentToChild>().parentToChild.ContainsKey(GameObject.Find("Top")))
-			Debug.Log ("hihihihihi");
-		else
-			Debug.Log("Not found");
-
-		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[GameObject.Find("Main Menu")].Count; i++)
-			g.GetComponent<ParentToChild>().parentToChild[GameObject.Find("Main Menu")][i].SetActive (true);
+		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[this.gameObject].Count; i++)
+			g.GetComponent<ParentToChild>().parentToChild[this.gameObject][i].SetActive (true);
 
 		activated = true;
 	}
