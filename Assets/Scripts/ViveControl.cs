@@ -15,6 +15,12 @@ public class ViveControl : MonoBehaviour
     private SteamVR_Controller.Device controller { get { return SteamVR_Controller.Input((int)trackedObj.index); } }
     private SteamVR_TrackedObject trackedObj;
 
+    public static bool press = false;
+    public static bool hold = false;
+
+    public static GameObject toChange;
+    public static GameObject domCont;
+
     bool rayHitMenu;
 
     void Start ()
@@ -39,7 +45,12 @@ public class ViveControl : MonoBehaviour
 			GameObject.Find ("ColorPicker").transform.parent = null;
 		}
 
-        if (controller.GetPress (trigger))
+        if (controller.GetPressDown(trigger)){
+            press = true;
+            domCont = this.gameObject;
+        }
+
+        else if (controller.GetPress (trigger))
         {
             LineRenderer laser = GetComponent<LineRenderer>();
             Vector3[] laserPoints = new Vector3[2];
@@ -76,6 +87,9 @@ public class ViveControl : MonoBehaviour
                 shrinkAll();
                 rayHitMenu = false;
             }
+
+            press = false;
+            hold = true;
         }
 
         else
@@ -101,6 +115,9 @@ public class ViveControl : MonoBehaviour
                     hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
                 }
             }
+            hold = false;
+            toChange = null;
+            domCont = null;
         }
 
 
@@ -134,6 +151,10 @@ public class ViveControl : MonoBehaviour
 				collide.transform.parent = transform;
 			}
 		}
+        if(collide.gameObject.tag == "Object")
+        {
+            toChange = collide.gameObject;
+        }
 	}
 
 

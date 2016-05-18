@@ -68,4 +68,9 @@
     <folder><title>Sleep</title></folder>
     <folder><title>Shut Down</title></folder>
   </folder>
+  <folder>
+    <title>Manipulation</title>
+    <widget><title>Move</title></widget>
+    <widget><title>Resize</title></widget>
+  </folder>
 </menu>

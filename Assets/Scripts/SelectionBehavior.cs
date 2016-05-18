@@ -14,7 +14,7 @@ public class SelectionBehavior : MonoBehaviour
 	{
 		layer = 0;
 		activated = false;
-        xmlr = GameObject.Find("ReadXML").GetComponent<XMLReader>();
+        //xmlr = GameObject.Find("ReadXML").GetComponent<XMLReader>();
 		defaultScale = this.transform.localScale;
 		enlargedScale = 1.25f * defaultScale;
 	}

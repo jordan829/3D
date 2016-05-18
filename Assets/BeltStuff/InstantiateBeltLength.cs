@@ -22,7 +22,7 @@ public class InstantiateBeltLength : MonoBehaviour {
 			Debug.Log("Controller not initialized");
 			return;
 		}
-		if (controller.GetPressDown(triggerButton))
+		/*if (controller.GetPressDown(triggerButton))
 		{
 			Belt.transform.position = transform.position;
 			float angle = (float)360.0 / (float)Belt.transform.childCount;
@@ -36,7 +36,7 @@ public class InstantiateBeltLength : MonoBehaviour {
 			Belt.transform.gameObject.SetActive (true);
 			//Belt.transform.gameObject.GetComponent<menuMove> ().offset = Belt.transform.position;
 			transform.gameObject.GetComponent<InstantiateBeltLength> ().enabled = false;
-		}
+		}*/
 
 	}
 }

@@ -10,6 +10,8 @@ public class XMLReader : MonoBehaviour
     string curElement;
     public GameObject top;
 	public GameObject menuItem;
+    public GameObject MoveWidget;
+    public GameObject ResizeWidget;
     Stack<string> layers;
     public string topTitle;
     public bool doneParsing;
@@ -92,9 +94,42 @@ public class XMLReader : MonoBehaviour
 							Debug.Log ("null");
                         menu = Instantiate (menuItem) as GameObject;
                         menu.name = selfName;
-						menu.GetComponent<SelectionBehavior> ().Layer = lay;
+						//menu.GetComponent<SelectionBehavior> ().Layer = lay;
 						layerMap [menu] = lay;
                         ptc.AddPath(parent, menu);
+                        layers.Push(reader.Value);
+                    }
+
+                    if(curElement == "widget")
+                    {
+                        lay += 1;
+                        reader.ReadToFollowing("title");
+                        reader.Read();
+                        string selfName = reader.Value;
+                        
+                        GameObject parent = GameObject.Find(layers.Peek());
+                        if (parent == null)
+                            Debug.Log("null");
+                        //NEED TO CHANGE
+                        Debug.Log(selfName);
+                        if(selfName == "Move")
+                        {
+                            menu = Instantiate(MoveWidget) as GameObject;
+                            menu.name = selfName;
+                            layerMap[menu] = lay;
+                            ptc.AddPath(parent, menu);
+                        }
+                        if(selfName == "Resize")
+                        {
+                            menu = Instantiate(ResizeWidget) as GameObject;
+                            menu.name = selfName;
+                            layerMap[menu] = lay;
+                            ptc.AddPath(parent, menu);
+                        }
+                            
+                        //menu.GetComponent<SelectionBehavior>().Layer = lay;
+                       
+                       
                         layers.Push(reader.Value);
                     }
 
