@@ -94,7 +94,8 @@ public class XMLReader : MonoBehaviour
 							Debug.Log ("null");
                         menu = Instantiate (menuItem) as GameObject;
                         menu.name = selfName;
-						//menu.GetComponent<SelectionBehavior> ().Layer = lay;
+						
+					menu.GetComponent<SelectionBehavior> ().orig = menu;
 						layerMap [menu] = lay;
                         ptc.AddPath(parent, menu);
                         layers.Push(reader.Value);
@@ -118,6 +119,7 @@ public class XMLReader : MonoBehaviour
                             menu.name = selfName;
                             layerMap[menu] = lay;
                             ptc.AddPath(parent, menu);
+							menu.GetComponent<SelectionBehavior> ().orig = menu;
                         }
                         if(selfName == "Resize")
                         {
@@ -125,6 +127,7 @@ public class XMLReader : MonoBehaviour
                             menu.name = selfName;
                             layerMap[menu] = lay;
                             ptc.AddPath(parent, menu);
+						menu.GetComponent<SelectionBehavior> ().orig = menu;
                         }
                             
                         //menu.GetComponent<SelectionBehavior>().Layer = lay;

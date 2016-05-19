@@ -21,6 +21,10 @@ public class ViveControl : MonoBehaviour
     public static GameObject toChange;
     public static GameObject domCont;
 
+    static float timer;
+    bool timerStop = false;
+    bool copyMove = false;
+
     bool rayHitMenu;
 
     void Start ()
@@ -48,6 +52,9 @@ public class ViveControl : MonoBehaviour
         if (controller.GetPressDown(trigger)){
             press = true;
             domCont = this.gameObject;
+
+            //timer
+            timer = 1.0f;
         }
 
         else if (controller.GetPress (trigger))
@@ -118,6 +125,8 @@ public class ViveControl : MonoBehaviour
             hold = false;
             toChange = null;
             domCont = null;
+            copyMove = false;
+			timerStop = false;
         }
 
 
@@ -131,30 +140,52 @@ public class ViveControl : MonoBehaviour
 
 	void OnTriggerStay(Collider collide)
 	{
-		if (collide.transform.tag == "MenuItem") 
+		Debug.Log (collide.gameObject.name);
+		if (hold && collide.transform.tag == "MenuItem" && copyMove)
+        {
+            timer -= Time.deltaTime;
+            Debug.Log(timer);
+            if(timer < 0 && !timerStop)
+            {
+                GameObject copy = Instantiate(collide.gameObject);
+                copy.transform.name = collide.gameObject.name + "copy";
+                copy.transform.position = this.transform.position;
+                copy.transform.SetParent(this.transform);
+                
+                timerStop = true;
+                copyMove = true;
+
+                copy.transform.tag = "Copy";
+				copy.layer = 9;
+            }
+        }
+
+        else if (collide.transform.tag == "MenuItem" && !copyMove) 
 		{
 			if (controller.GetPressDown (trigger)) 
 			{
-				collide.gameObject.GetComponent<SelectionBehavior>().Select();
+				if(collide.gameObject.GetComponent<SelectionBehavior>() !=null)
+					collide.gameObject.GetComponent<SelectionBehavior>().Select();
 			}
 
-			if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			/*if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
 			{
 				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
-			}
+			}*/
 		}
 
-		if (collide.transform.tag == "ColorHandle")
+		else if (collide.transform.tag == "ColorHandle" && !copyMove)
 		{
 			if (controller.GetPressDown (grip))
 			{
 				collide.transform.parent = transform;
 			}
 		}
-        if(collide.gameObject.tag == "Object")
+        else if(collide.gameObject.tag == "Object" &&! copyMove)
         {
             toChange = collide.gameObject;
         }
+        
 	}
 
 

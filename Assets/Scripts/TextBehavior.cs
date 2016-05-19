@@ -10,6 +10,6 @@ public class TextBehavior : MonoBehaviour
 
 	void Update ()
 	{
-		GetComponent<TextMesh> ().text = transform.parent.name;
+		GetComponent<TextMesh> ().text = transform.parent.GetComponent<SelectionBehavior>().orig.name;
 	}
 }

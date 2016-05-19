@@ -10,13 +10,15 @@ public class SelectionBehavior : MonoBehaviour
 	Vector3 defaultScale;
 	public Vector3 enlargedScale;
 
+	public GameObject orig;
+
 	void Start ()
 	{
 		layer = 0;
 		activated = false;
         //xmlr = GameObject.Find("ReadXML").GetComponent<XMLReader>();
 		defaultScale = this.transform.localScale;
-		enlargedScale = 1.25f * defaultScale;
+		//enlargedScale = 1.25f * defaultScale;
 	}
 
 	void Update ()
@@ -38,23 +40,24 @@ public class SelectionBehavior : MonoBehaviour
 	public void Select()
 	{
 		checkOtherLayers ();
-		this.transform.localScale = enlargedScale;
+		//this.transform.localScale = enlargedScale;
 		activateNextLevel ();
 	}
 
 	public void checkOtherLayers()
 	{
+		
 		foreach (KeyValuePair<GameObject, int> kvp in GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap)
 		{
 			GameObject g = kvp.Key;
 			int i = kvp.Value;
 
-			if (i > GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap[this.gameObject])
+			if (i > GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap[orig])
 				g.SetActive (false);
 
 			if(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.ContainsKey(g))
 			{
-				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains(this.gameObject))
+				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains(orig))
 					g.transform.localScale = defaultScale;
 			}
 			//g.transform.localScale = defaultScale;
@@ -77,15 +80,15 @@ public class SelectionBehavior : MonoBehaviour
 
 		}
 
-		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[this.gameObject].Count; i++)
-			g.GetComponent<ParentToChild>().parentToChild[this.gameObject][i].SetActive (true);
+		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[orig].Count; i++)
+			g.GetComponent<ParentToChild>().parentToChild[orig][i].SetActive (true);
 
 		activated = true;
 	}
 
 	public void action(Vector3 controllerPos)
 	{
-		switch (this.gameObject.name)
+		switch (orig.name)
 		{
 			case "Shut Down":
 				UnityEditor.EditorApplication.isPlaying = false;
@@ -97,6 +100,7 @@ public class SelectionBehavior : MonoBehaviour
 				break;
 		}
 	}
+
 
 	/*public void incrLevel(GameObject parent)
     {
