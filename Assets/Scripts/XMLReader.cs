@@ -95,7 +95,7 @@ public class XMLReader : MonoBehaviour
                         menu = Instantiate (menuItem) as GameObject;
                         menu.name = selfName;
 						
-					menu.GetComponent<SelectionBehavior> ().orig = menu;
+						menu.GetComponent<SelectionBehavior> ().orig = menu;
 						layerMap [menu] = lay;
                         ptc.AddPath(parent, menu);
                         layers.Push(reader.Value);
@@ -112,7 +112,6 @@ public class XMLReader : MonoBehaviour
                         if (parent == null)
                             Debug.Log("null");
                         //NEED TO CHANGE
-                        Debug.Log(selfName);
                         if(selfName == "Move")
                         {
                             menu = Instantiate(MoveWidget) as GameObject;
@@ -145,7 +144,7 @@ public class XMLReader : MonoBehaviour
                     curElement = reader.Name;
                     if (curElement != "title")
                         layers.Pop();
-					if(curElement == "folder")
+				if(curElement == "folder" || curElement == "widget")
 						lay -= 1;
                     break;
             }

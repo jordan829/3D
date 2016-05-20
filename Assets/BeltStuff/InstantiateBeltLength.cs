@@ -12,7 +12,6 @@ public class InstantiateBeltLength : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		trackedObj = GetComponent<SteamVR_TrackedObject>();
-
 	}
 	
 	// Update is called once per frame
@@ -34,7 +33,11 @@ public class InstantiateBeltLength : MonoBehaviour {
 				Belt.transform.GetChild (i).transform.position += Belt.transform.GetChild (i).transform.forward * diff;
 			}
 			Belt.transform.gameObject.SetActive (true);
-			//Belt.transform.gameObject.GetComponent<menuMove> ().offset = Belt.transform.position;
+			Belt.transform.gameObject.GetComponent<menuMove> ().offset = Belt.transform.position;
+
+			// Remove starting message
+			GameObject.Find ("StartMessage").SetActive (false);
+
 			transform.gameObject.GetComponent<InstantiateBeltLength> ().enabled = false;
 		}
 

@@ -3,12 +3,12 @@ using System.Collections;
 
 public class ViveControl : MonoBehaviour
 {
-	private Valve.VR.EVRButtonId appMenu = Valve.VR.EVRButtonId.k_EButton_ApplicationMenu;
-	private Valve.VR.EVRButtonId axis0 = Valve.VR.EVRButtonId.k_EButton_Axis0;
-	private Valve.VR.EVRButtonId axis1 = Valve.VR.EVRButtonId.k_EButton_Axis1;
-	private Valve.VR.EVRButtonId axis2 = Valve.VR.EVRButtonId.k_EButton_Axis2;
-	private Valve.VR.EVRButtonId axis3 = Valve.VR.EVRButtonId.k_EButton_Axis3;
-	private Valve.VR.EVRButtonId axis4 = Valve.VR.EVRButtonId.k_EButton_Axis4;
+	//private Valve.VR.EVRButtonId appMenu = Valve.VR.EVRButtonId.k_EButton_ApplicationMenu;
+	//private Valve.VR.EVRButtonId axis0 = Valve.VR.EVRButtonId.k_EButton_Axis0;
+	//private Valve.VR.EVRButtonId axis1 = Valve.VR.EVRButtonId.k_EButton_Axis1;
+	//private Valve.VR.EVRButtonId axis2 = Valve.VR.EVRButtonId.k_EButton_Axis2;
+	//private Valve.VR.EVRButtonId axis3 = Valve.VR.EVRButtonId.k_EButton_Axis3;
+	//private Valve.VR.EVRButtonId axis4 = Valve.VR.EVRButtonId.k_EButton_Axis4;
     private Valve.VR.EVRButtonId grip = Valve.VR.EVRButtonId.k_EButton_Grip;
 	private Valve.VR.EVRButtonId touchpad = Valve.VR.EVRButtonId.k_EButton_SteamVR_Touchpad;
     private Valve.VR.EVRButtonId trigger = Valve.VR.EVRButtonId.k_EButton_SteamVR_Trigger;
@@ -26,10 +26,12 @@ public class ViveControl : MonoBehaviour
     bool copyMove = false;
 
     bool rayHitMenu;
+	bool rayHitColor;
 
     void Start ()
     {
         rayHitMenu = false;
+		rayHitColor = false;
         trackedObj = GetComponent<SteamVR_TrackedObject>();
         LineRenderer laser = this.gameObject.GetComponent<LineRenderer>();
         laser.SetWidth(0f, 0f);
@@ -49,11 +51,10 @@ public class ViveControl : MonoBehaviour
 			GameObject.Find ("ColorPicker").transform.parent = null;
 		}
 
-        if (controller.GetPressDown(trigger)){
+        if (controller.GetPressDown(trigger))
+		{
             press = true;
             domCont = this.gameObject;
-
-            //timer
             timer = 1.0f;
         }
 
@@ -83,9 +84,10 @@ public class ViveControl : MonoBehaviour
 
                 if (hit.transform.tag == "Color")
                 {
-					Debug.Log ("hit color");
                     shrinkAll();
                     hit.transform.gameObject.GetComponent<ColorProperty>().Enlarge();
+					hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
+
                 }
 			}
 
@@ -119,36 +121,29 @@ public class ViveControl : MonoBehaviour
 
                 if (hit.transform.tag == "Color")
                 {
-                    hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
+                    //hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
                 }
             }
+
             hold = false;
             toChange = null;
             domCont = null;
             copyMove = false;
 			timerStop = false;
         }
-
-
-
-		if (controller.GetTouchDown (touchpad))
-		{
-			Vector3 delta = GameObject.Find ("ColorPicker").transform.position - controller.transform.pos;
-			Debug.Log ("Pos: " + delta);
-		}
     }
 
 	void OnTriggerStay(Collider collide)
 	{
-		Debug.Log (collide.gameObject.name);
-		if (hold && collide.transform.tag == "MenuItem" && copyMove)
+		if (hold && collide.transform.tag == "MenuItem" && !copyMove)
         {
             timer -= Time.deltaTime;
-            Debug.Log(timer);
-            if(timer < 0 && !timerStop)
+			if(timer < 0 && !timerStop && !collide.gameObject.GetComponent<CopyToMenu>().isCopy)
             {
                 GameObject copy = Instantiate(collide.gameObject);
                 copy.transform.name = collide.gameObject.name + "copy";
+				//NOTE: just needed to reset orig. shortcuts are now working properly
+				copy.GetComponent<SelectionBehavior> ().orig = collide.gameObject.GetComponent<SelectionBehavior> ().orig;
                 copy.transform.position = this.transform.position;
                 copy.transform.SetParent(this.transform);
                 
@@ -157,10 +152,11 @@ public class ViveControl : MonoBehaviour
 
                 copy.transform.tag = "Copy";
 				copy.layer = 9;
+				Debug.Log ("test");
             }
         }
 
-        else if (collide.transform.tag == "MenuItem" && !copyMove) 
+        else if (collide.transform.tag == "MenuItem") 
 		{
 			if (controller.GetPressDown (trigger)) 
 			{
@@ -168,24 +164,49 @@ public class ViveControl : MonoBehaviour
 					collide.gameObject.GetComponent<SelectionBehavior>().Select();
 			}
 
-			/*if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
 			{
 				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
-			}*/
+			}
 		}
 
-		else if (collide.transform.tag == "ColorHandle" && !copyMove)
+		else if (collide.transform.tag == "ColorHandle")
 		{
 			if (controller.GetPressDown (grip))
 			{
 				collide.transform.parent = transform;
 			}
 		}
-        else if(collide.gameObject.tag == "Object" &&! copyMove)
+        else if(collide.gameObject.tag == "Object")
         {
             toChange = collide.gameObject;
         }
         
+	}
+
+	void OnTriggerStayPlease(Collider collide)
+	{
+		if (collide.transform.tag == "MenuItem") 
+		{
+			if (controller.GetPressDown (trigger)) 
+			{
+				if(collide.gameObject.GetComponent<SelectionBehavior>() !=null)
+					collide.gameObject.GetComponent<SelectionBehavior>().Select();
+			}
+
+			else if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			{
+				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
+			}
+		}
+
+		else if (collide.transform.tag == "ColorHandle")
+		{
+			if (controller.GetPressDown (grip))
+			{
+				collide.transform.parent = transform;
+			}
+		}
 	}
 
 

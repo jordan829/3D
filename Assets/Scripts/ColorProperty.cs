@@ -22,18 +22,16 @@ public class ColorProperty : MonoBehaviour
 
     public void Enlarge()
     {
-        this.transform.localScale = enlargeScale;
+		this.transform.localScale = new Vector3 (0.15f, 0.15f, 0.15f) * 1.2f;
     }
 
     public void Shrink()
     {
-        this.transform.localScale = defaultScale;
+		this.transform.localScale = new Vector3 (0.15f, 0.15f, 0.15f);
     }
 
     public void ChangeMenuColors()
     {
-        //GameObject[] menus = GameObject.FindGameObjectsWithTag("MenuItem");
-        //GameObject[] texts = GameObject.FindGameObjectsWithTag("Text");
 		List<GameObject> menus = new List<GameObject> ();
 		List<GameObject> texts = new List<GameObject>();
 
@@ -51,22 +49,6 @@ public class ColorProperty : MonoBehaviour
 				else
 					child.GetComponent<TextMesh>().color = Color.white;
 			}
-		}
-
-
-        /*foreach (GameObject m in menus)
-        {
-            m.GetComponent<Renderer>().material = colorMat;
-        }
-
-        foreach(GameObject t in texts)
-        {
-            if (this.gameObject.name == "WhiteColor")
-                t.GetComponent<TextMesh>().color = Color.black;
-            else
-                t.GetComponent<TextMesh>().color = Color.white;
-        }*/
-
-        
+		}     
     }
 }

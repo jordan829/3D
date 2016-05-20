@@ -33,8 +33,8 @@ public class Knob : MonoBehaviour {
         }
 
         float t = Vector3.Angle(transform.up,knobHand.transform.position);
-        Debug.Log(knobHand.transform.position);
-        Debug.Log(t);
+        //Debug.Log(knobHand.transform.position);
+        //Debug.Log(t);
         value = (1 - t) * min + t * max;
         valueText.GetComponent<TextMesh>().text = t.ToString();
         

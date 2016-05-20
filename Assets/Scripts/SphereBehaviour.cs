@@ -51,9 +51,10 @@ public class SphereBehaviour : MonoBehaviour {
 				return;
 			
 			int indexOffset = currList.Count / 2;
+			float cubeSize = 0.08f;
 			for (int i = 0; i < currList.Count; i++) {
 				//Debug.Log ("Setting position of " + currList [i].name);
-				currList [i].transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+				currList [i].transform.localScale = new Vector3(cubeSize, cubeSize, cubeSize);
 				currList [i].transform.position = InnerSpherePosition (horizLevel*horizDegDist, vertDegDist * (indexOffset - i));
 				currList [i].transform.parent = transform;
 				currList [i].transform.LookAt (transform);

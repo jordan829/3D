@@ -19,7 +19,7 @@ public class MenuSetup : MonoBehaviour
 	{
 		Dictionary<GameObject, List<GameObject>>.KeyCollection keyColl = GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.Keys;
 		foreach (GameObject g in keyColl) {
-			Debug.Log (g.name);
+			//Debug.Log (g.name);
 			if(g.name != "Top")
 				g.SetActive (false);
 		}
@@ -48,8 +48,9 @@ public class MenuSetup : MonoBehaviour
 
 		if (top != null) 
 		{
+			float offsetDeg = 15.0f;
 			//GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 30.0f);
-			GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, 45.0f, 25.0f);
+			GameObject.Find ("Sphere").GetComponent<SphereBehaviour> ().LoadMenu (top, 0, offsetDeg, offsetDeg);
 		}
 	}
 }

@@ -6,7 +6,6 @@ public class SelectionBehavior : MonoBehaviour
 {
 	public bool activated;
 	public int layer;
-	XMLReader xmlr;
 	Vector3 defaultScale;
 	public Vector3 enlargedScale;
 
@@ -16,9 +15,8 @@ public class SelectionBehavior : MonoBehaviour
 	{
 		layer = 0;
 		activated = false;
-        //xmlr = GameObject.Find("ReadXML").GetComponent<XMLReader>();
 		defaultScale = this.transform.localScale;
-		//enlargedScale = 1.25f * defaultScale;
+		enlargedScale = 1.25f * defaultScale;
 	}
 
 	void Update ()
@@ -40,8 +38,10 @@ public class SelectionBehavior : MonoBehaviour
 	public void Select()
 	{
 		checkOtherLayers ();
+		//NOTE: This makes the object super small when it is applied to a shortcut on the toolbelt
 		//this.transform.localScale = enlargedScale;
 		activateNextLevel ();
+		activatePreviousLevels();
 	}
 
 	public void checkOtherLayers()
@@ -60,7 +60,7 @@ public class SelectionBehavior : MonoBehaviour
 				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains(orig))
 					g.transform.localScale = defaultScale;
 			}
-			//g.transform.localScale = defaultScale;
+			g.transform.localScale = defaultScale;
 		}
 	}
 
@@ -68,22 +68,46 @@ public class SelectionBehavior : MonoBehaviour
 	{
 		GameObject g = GameObject.Find ("Plane");
 
-		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild)
-		{
-			GameObject parent = kvp.Key;
-			List<GameObject> children = kvp.Value;
-
-			for(int i = 0; i < children.Count; i++)
-			{
-				Debug.Log(parent.name + " -> " + children[i].name);
-			}            
-
-		}
-
 		for (int i= 0; i < g.GetComponent<ParentToChild>().parentToChild[orig].Count; i++)
 			g.GetComponent<ParentToChild>().parentToChild[orig][i].SetActive (true);
 
 		activated = true;
+	}
+
+	void activatePreviousLevels()
+	{
+		Stack<GameObject> stack = new Stack<GameObject>();
+		stack.Push (orig);
+
+		// Create stack of parent objects leading up to "Top". Then go through each object, starting from "Top,
+		// and activate the next layer. This ensures that all layers will be activated if a shortcut is created 
+		// for an item that is deep in the meny hierarchy
+		while (stack.Peek() != GameObject.Find ("Top")) 
+		{
+			// Loop through all menu items to find the parent of the current
+			//Note: This is pretty brute force. If performance ever takes a hit, this should be redone to be more efficient
+			foreach (KeyValuePair<GameObject, List<GameObject>> kvp in GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild) 
+			{
+				GameObject g = kvp.Key;
+				List<GameObject> children = kvp.Value;	
+				foreach(GameObject c in children)
+				{
+					// Push parent to stack
+					if (stack.Peek () == c)
+						stack.Push (g);
+				}
+			}
+		}
+
+		// Pop top since it does not have SelectionBehavior
+		stack.Pop ();
+
+		// Perform "selection" on each object leading up to the current menu item being selected
+		while (stack.Count != 0) 
+		{
+			stack.Peek ().GetComponent<SelectionBehavior> ().checkOtherLayers ();
+			stack.Pop ().GetComponent<SelectionBehavior> ().activateNextLevel ();
+		}
 	}
 
 	public void action(Vector3 controllerPos)
