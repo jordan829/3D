@@ -13,7 +13,7 @@ public class CopyToMenu : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
-		this.gameObject.transform.LookAt(GameObject.Find("Sphere").transform);
+		this.gameObject.transform.LookAt(GameObject.Find("Camera (head)").transform);
         if (this.transform.tag == "Copy")
             isCopy = true;
 

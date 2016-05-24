@@ -46,9 +46,15 @@ public class ViveControl : MonoBehaviour
             return;
         }
 
+		// Release grabbable items
 		if (controller.GetPressUp (grip))
 		{
-			GameObject.Find ("ColorPicker").transform.parent = null;
+			//GameObject.Find ("ColorPicker").transform.parent = null;
+
+			foreach (GameObject g in GameObject.FindGameObjectsWithTag("Grabbable"))
+			{
+				g.transform.parent = null;
+			}
 		}
 
         if (controller.GetPressDown(trigger))
@@ -58,7 +64,8 @@ public class ViveControl : MonoBehaviour
             timer = 1.0f;
         }
 
-        else if (controller.GetPress (trigger))
+		// Render laser (for color picker)
+		else if (controller.GetPress (trigger) || (controller.GetPress(trigger)  && controller.GetPress(grip)))
         {
             LineRenderer laser = GetComponent<LineRenderer>();
             Vector3[] laserPoints = new Vector3[2];
@@ -84,6 +91,7 @@ public class ViveControl : MonoBehaviour
 
                 if (hit.transform.tag == "Color")
                 {
+					controller.TriggerHapticPulse (5000);	//NOTE: make stronger
                     shrinkAll();
                     hit.transform.gameObject.GetComponent<ColorProperty>().Enlarge();
 					hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
@@ -164,13 +172,15 @@ public class ViveControl : MonoBehaviour
 					collide.gameObject.GetComponent<SelectionBehavior>().Select();
 			}
 
-			if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			//if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
+			if (controller.GetTouchDown (touchpad))
 			{
 				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
 			}
 		}
 
-		else if (collide.transform.tag == "ColorHandle")
+		// Grab object
+		else if (collide.transform.tag == "Grabbable")
 		{
 			if (controller.GetPressDown (grip))
 			{
@@ -184,7 +194,8 @@ public class ViveControl : MonoBehaviour
         
 	}
 
-	void OnTriggerStayPlease(Collider collide)
+	// Safe to remove
+	void OnTriggerStayTest(Collider collide)
 	{
 		if (collide.transform.tag == "MenuItem") 
 		{
@@ -217,7 +228,7 @@ public class ViveControl : MonoBehaviour
 			controller.TriggerHapticPulse (3000);	//NOTE: make stronger
 		}
 	}
-
+		
     void shrinkAll()
     {
         GameObject[] colors = GameObject.FindGameObjectsWithTag("Color");

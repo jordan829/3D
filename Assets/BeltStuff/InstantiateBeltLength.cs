@@ -23,14 +23,26 @@ public class InstantiateBeltLength : MonoBehaviour {
 		}
 		if (controller.GetPressDown(triggerButton))
 		{
+			float mult = 2;
 			Belt.transform.position = transform.position;
-			float angle = (float)360.0 / (float)Belt.transform.childCount;
-			for(int i = 1; i < Belt.transform.childCount; i++)
+			float angle = 30;//(float)360.0 / (float)Belt.transform.childCount;
+			for(int i = 1; i < Belt.transform.childCount; i = i + 1)
 			{
-				float diff = (Belt.transform.GetChild (i).transform.position - new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z)).magnitude;
+				
+				float diff =   (Belt.transform.GetChild (i).transform.position - new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z)).magnitude;
 				Belt.transform.GetChild (i).transform.position = new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z);
+				Belt.transform.GetChild (i).transform.rotation = Belt.transform.GetChild (0).transform.rotation;
 				Belt.transform.GetChild (i).transform.Rotate(Vector3.up * angle * (float)(i+1), Space.Self);
 				Belt.transform.GetChild (i).transform.position += Belt.transform.GetChild (i).transform.forward * diff;
+
+				/*if(i+1 < Belt.transform.childCount){
+					angle *= -1;
+					//mult += 1;
+					diff =  (Belt.transform.GetChild (i).transform.position - new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z)).magnitude;
+					Belt.transform.GetChild (i+1).transform.position = new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z);
+					Belt.transform.GetChild (i+1).transform.Rotate(Vector3.up * angle * (float)(i+1), Space.Self);
+					Belt.transform.GetChild (i+1).transform.position += Belt.transform.GetChild (i+1).transform.forward * diff;
+				}*/
 			}
 			Belt.transform.gameObject.SetActive (true);
 			Belt.transform.gameObject.GetComponent<menuMove> ().offset = Belt.transform.position;
