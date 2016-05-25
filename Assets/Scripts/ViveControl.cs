@@ -28,8 +28,15 @@ public class ViveControl : MonoBehaviour
     bool rayHitMenu;
 	bool rayHitColor;
 
+	float shrinker;
+	bool shrinking;
+	GameObject shrinkObject;
+
     void Start ()
     {
+		shrinkObject = null;
+		shrinker = 1.0f;
+		shrinking = false;
         rayHitMenu = false;
 		rayHitColor = false;
         trackedObj = GetComponent<SteamVR_TrackedObject>();
@@ -40,6 +47,20 @@ public class ViveControl : MonoBehaviour
 	
 	void Update ()
     {
+		if (shrinking)
+		{
+			shrinker -= 0.005f;
+			shrinkObject.transform.localScale = shrinkObject.transform.localScale * shrinker;
+
+			if (shrinker <= 0.1f)
+			{
+				shrinking = false;
+				shrinker = 1.0f;
+				Destroy (shrinkObject);
+				shrinkObject = null;
+			}
+		}
+
         if (controller == null)
         {
             Debug.Log("Controller not initialized");
@@ -143,7 +164,19 @@ public class ViveControl : MonoBehaviour
 
 	void OnTriggerStay(Collider collide)
 	{
-		if (hold && collide.transform.tag == "MenuItem" && !copyMove)
+		if (hold && collide.transform.name.Contains ("copy") && collide.transform.tag == "MenuItem")
+		{
+			timer -= Time.deltaTime;
+
+			if (timer < -1)
+			{
+				shrinking = true;
+				shrinkObject = collide.gameObject;
+				//Destroy (collide.gameObject);
+			}
+		}
+
+		else if (hold && collide.transform.tag == "MenuItem" && !copyMove)
         {
             timer -= Time.deltaTime;
 			if(timer < 0 && !timerStop && !collide.gameObject.GetComponent<CopyToMenu>().isCopy)
@@ -160,7 +193,6 @@ public class ViveControl : MonoBehaviour
 
                 copy.transform.tag = "Copy";
 				copy.layer = 9;
-				Debug.Log ("test");
             }
         }
 
@@ -168,6 +200,7 @@ public class ViveControl : MonoBehaviour
 		{
 			if (controller.GetPressDown (trigger)) 
 			{
+				collide.gameObject.GetComponent<SelectionBehavior> ().turnOnMainMenu();
 				if(collide.gameObject.GetComponent<SelectionBehavior>() !=null)
 					collide.gameObject.GetComponent<SelectionBehavior>().Select();
 			}
@@ -201,12 +234,14 @@ public class ViveControl : MonoBehaviour
 		{
 			if (controller.GetPressDown (trigger)) 
 			{
+				//collide.gameObject.GetComponent<SelectionBehavior> ().turnOnMainMenu();
 				if(collide.gameObject.GetComponent<SelectionBehavior>() !=null)
 					collide.gameObject.GetComponent<SelectionBehavior>().Select();
 			}
 
 			else if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
 			{
+
 				collide.gameObject.GetComponent<SelectionBehavior>().action (controller.transform.pos);
 			}
 		}
@@ -223,7 +258,7 @@ public class ViveControl : MonoBehaviour
 
 	void OnTriggerEnter(Collider collide)
 	{
-		if (collide.transform.tag == "MenuItem") 
+		if (collide.transform.tag == "MenuItem" || collide.transform.tag == "Belt") 
 		{
 			controller.TriggerHapticPulse (3000);	//NOTE: make stronger
 		}

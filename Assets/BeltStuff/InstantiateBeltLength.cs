@@ -9,9 +9,12 @@ public class InstantiateBeltLength : MonoBehaviour {
 	private SteamVR_TrackedObject trackedObj;
 	public GameObject camera;
 	public GameObject Belt;
+	public GameObject startMess;
 	// Use this for initialization
 	void Start () {
 		trackedObj = GetComponent<SteamVR_TrackedObject>();
+		startMess = GameObject.Find ("StartMessage");
+
 	}
 	
 	// Update is called once per frame
@@ -21,15 +24,23 @@ public class InstantiateBeltLength : MonoBehaviour {
 			Debug.Log("Controller not initialized");
 			return;
 		}
-		if (controller.GetPressDown(triggerButton))
+		if (controller != null && controller.GetPressDown(triggerButton))
 		{
 			float mult = 2;
 			Belt.transform.position = transform.position;
 			float angle = 30;//(float)360.0 / (float)Belt.transform.childCount;
 			for(int i = 1; i < Belt.transform.childCount; i = i + 1)
 			{
-				
+
+
 				float diff =   (Belt.transform.GetChild (i).transform.position - new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z)).magnitude;
+
+				//Create a minmum radius for the belt
+				if (diff < 0.23f) {
+					diff = 0.23f;
+				}
+				//Debug.Log ("distance: " + diff);
+
 				Belt.transform.GetChild (i).transform.position = new Vector3(camera.transform.position.x, Belt.transform.GetChild (i).transform.position.y, camera.transform.position.z);
 				Belt.transform.GetChild (i).transform.rotation = Belt.transform.GetChild (0).transform.rotation;
 				Belt.transform.GetChild (i).transform.Rotate(Vector3.up * angle * (float)(i+1), Space.Self);
@@ -45,7 +56,7 @@ public class InstantiateBeltLength : MonoBehaviour {
 				}*/
 			}
 			Belt.transform.gameObject.SetActive (true);
-			Belt.transform.gameObject.GetComponent<menuMove> ().offset = Belt.transform.position;
+			Belt.transform.gameObject.GetComponent<menuMove> ().offset =  -camera.transform.position + Belt.transform.position;
 
 			// Remove starting message
 			GameObject.Find ("StartMessage").SetActive (false);

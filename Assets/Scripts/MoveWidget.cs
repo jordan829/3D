@@ -38,6 +38,7 @@ public class MoveWidget : MonoBehaviour
             startPos = ViveControl.domCont.transform.position;
         }
     }
+
     void OnTriggerStay(Collider col)
     {
         if (ViveControl.press && col.gameObject.tag == "Controller")

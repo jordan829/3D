@@ -8,11 +8,21 @@ public class SelectionBehavior : MonoBehaviour
 	public int layer;
 	Vector3 defaultScale;
 	public Vector3 enlargedScale;
-
 	public GameObject orig;
+	private GameObject Sphere;
+	private GameObject Belt;
+	private GameObject rightH;
+
+	bool movePressed;
+	bool resizePressed;
+	bool MenuOnOff = true;
 
 	void Start ()
 	{
+		rightH = GameObject.Find ("Controller (right)");
+		Sphere = GameObject.Find ("Sphere");
+		movePressed = false;
+		resizePressed = true;
 		layer = 0;
 		activated = false;
 		defaultScale = this.transform.localScale;
@@ -21,7 +31,24 @@ public class SelectionBehavior : MonoBehaviour
 
 	void Update ()
 	{
-		
+		if (movePressed)
+		{
+			
+		}
+
+		else
+		{
+			
+		}
+
+		if (resizePressed)
+		{
+
+		}
+
+		else
+		{
+		}
 	}
 
 	public bool Activated
@@ -112,20 +139,56 @@ public class SelectionBehavior : MonoBehaviour
 
 	public void action(Vector3 controllerPos)
 	{
+		//Sphere.gameObject.SetActive (true);
+
 		switch (orig.name)
 		{
 			case "Shut Down":
 				UnityEditor.EditorApplication.isPlaying = false;
 				break;
 			case "Color Palette":
-				GameObject.Find ("ColorPicker").transform.position = controllerPos + new Vector3 (0.15f, 0.3f, 0.2f);
+				//GameObject.Find ("ColorPicker").transform.position = controllerPos + new Vector3 (0.15f, 0.3f, 0.2f);
+				GameObject.Find ("ColorPicker").transform.position = GameObject.Find("Camera (head)").gameObject.transform.position + new Vector3 (0.2f, 0.2f, -0.5f);
 				break;
+			case "Move":
+				movePressed = !movePressed;
+				break;
+			case "Resize":
+				resizePressed = !resizePressed;
+				break;
+			case "MaxMinMenu":
+				MenuOnOff = !MenuOnOff;
+				Sphere.gameObject.SetActive (MenuOnOff);
+				orig.transform.LookAt ( GameObject.Find ("Camera (head)").transform.position);
+				break;
+			case "ResizeBelt":
+				Belt = GameObject.Find ("Belt");
+				resetBelt();
+				break;
+
 			default:
 				break;
 		}
 	}
+	public void turnOnMainMenu()
+	{
+		Sphere.gameObject.SetActive (true);
+
+	}
+	public void resetBelt()
+	{
+		Belt.transform.position = Vector3.zero;
+		for (int i = 0; i < Belt.transform.childCount; i++) {
+			Belt.transform.GetChild (i).transform.localPosition = Vector3.zero;
+		}
+		rightH.transform.gameObject.GetComponent<InstantiateBeltLength> ().enabled = true;
+		rightH.transform.gameObject.GetComponent<InstantiateBeltLength> ().startMess.SetActive (true);
+		Belt.transform.gameObject.GetComponent<menuMove> ().offset = Vector3.zero;
+		Belt.SetActive (false);
 
 
+
+	}
 	/*public void incrLevel(GameObject parent)
     {
 		if (parent.transform.name == "Top")
