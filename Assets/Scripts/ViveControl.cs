@@ -70,7 +70,7 @@ public class ViveControl : MonoBehaviour
 		// Release grabbable items
 		if (controller.GetPressUp (grip))
 		{
-			//GameObject.Find ("ColorPicker").transform.parent = null;
+			GameObject.Find ("Second").GetComponent<ClockHandMovement> ().updateOrientation ();
 
 			foreach (GameObject g in GameObject.FindGameObjectsWithTag("Grabbable"))
 			{

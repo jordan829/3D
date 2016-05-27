@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-
+using UnityEngine.SceneManagement;
 public class SelectionBehavior : MonoBehaviour
 {
 	public bool activated;
@@ -148,14 +148,17 @@ public class SelectionBehavior : MonoBehaviour
 				break;
 			case "Color Palette":
 				//GameObject.Find ("ColorPicker").transform.position = controllerPos + new Vector3 (0.15f, 0.3f, 0.2f);
-				GameObject.Find ("ColorPicker").transform.position = GameObject.Find("Camera (head)").gameObject.transform.position + new Vector3 (0.2f, 0.2f, -0.5f);
+				//GameObject.Find ("ColorPicker").transform.position = GameObject.Find("Camera (head)").gameObject.transform.position + new Vector3 (0.2f, 0.2f, -0.5f);
+				GameObject.Find ("ColorPicker").transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position + new Vector3 (0f, 0f, -0.5f);
+				GameObject.Find ("ColorPicker").transform.LookAt (GameObject.Find ("Camera (head)").transform);
+				GameObject.Find ("ColorPicker").transform.Rotate (new Vector3 (0, 180, 0));
 				break;
-			case "Move":
+			/*case "Move":
 				movePressed = !movePressed;
 				break;
 			case "Resize":
 				resizePressed = !resizePressed;
-				break;
+				break;*/
 			case "MaxMinMenu":
 				MenuOnOff = !MenuOnOff;
 				Sphere.gameObject.SetActive (MenuOnOff);
@@ -165,7 +168,14 @@ public class SelectionBehavior : MonoBehaviour
 				Belt = GameObject.Find ("Belt");
 				resetBelt();
 				break;
-
+			case "Time":
+				GameObject.Find ("Clock").transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position + new Vector3 (-0.25f, -0.25f, -0.5f);
+				GameObject.Find ("Clock").transform.LookAt (GameObject.Find ("Camera (head)").transform);
+				GameObject.Find ("Clock").transform.Rotate (new Vector3 (0, 180, 0));
+				break;
+			case "Restart":
+				SceneManager.LoadScene (0);
+				break;
 			default:
 				break;
 		}

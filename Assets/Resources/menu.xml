@@ -70,7 +70,7 @@
   </folder>
   <folder>
     <title>Manipulation</title>
-    <folder><title>Move</title></folder>
-    <folder><title>Resize</title></folder>
+    <widget><title>Move</title></widget>
+    <widget><title>Resize</title></widget>
   </folder>
 </menu>

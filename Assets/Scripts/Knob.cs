@@ -8,7 +8,7 @@ public class Knob : MonoBehaviour {
     private bool on = false;
     public float min = float.NegativeInfinity;
     public float max = float.PositiveInfinity;
-    public static float value = 7;
+    public float value = 7;
     private Quaternion origRotCont;
     private Quaternion origRot;
     // Use this for initialization
@@ -26,17 +26,32 @@ public class Knob : MonoBehaviour {
         if (on && ViveControl.hold)
         {
             Quaternion angleDelta = (ViveControl.domCont.transform.rotation * Quaternion.Inverse(origRotCont));         
-            angleDelta = Quaternion.Euler(0, angleDelta.eulerAngles.z, 0);
-            //transform.rotation = (origRot * angleDelta);
-            transform.RotateAround(transform.position, transform.up,1);
-
+			angleDelta = Quaternion.Euler(0, angleDelta.eulerAngles.z, 0);
+			transform.rotation = (origRot * angleDelta);
+			//transform.rotation = Quaternion.Euler (transform.eulerAngles.x, 180, 90);
+			//transform.RotateAround(transform.position, transform.up,1);
+			;
         }
 
-        float t = Vector3.Angle(transform.up,knobHand.transform.position);
-        //Debug.Log(knobHand.transform.position);
-        //Debug.Log(t);
+		float t = transform.rotation.eulerAngles.x;//Vector3.Angle(transform.up,knobHand.transform.position);
+		if (transform.eulerAngles.y < 10) {
+			if( t > 270)
+				t = t - 270;
+			else {
+				t += 90;
+			}
+		}
+		else {
+			if (t < 270)
+				t = 270 - t;
+			else
+				t = 630 - t;
+		}
+		t = t / 360.0f;
+		//Debug.Log(knobHand.transform.position);
+        Debug.Log(t);
         value = (1 - t) * min + t * max;
-        valueText.GetComponent<TextMesh>().text = t.ToString();
+        valueText.GetComponent<TextMesh>().text = value.ToString();
         
 
 	}
