@@ -15,6 +15,12 @@ public class Texture3DRenderer : MonoBehaviour
     public string FileTypeExtension = ".pgm";
     public int Width = 256, Height = 256, Depth = 128;
 
+    // lookup table
+    public Color[] lookUpTable = new Color[256];
+    public Color[] lookUpQuick = new Color[8];
+    public bool enableLookUpQuick = true;
+    Texture2D lookUpProxy;
+
     // Use this for initialization
     void Start()
     {
@@ -69,24 +75,42 @@ public class Texture3DRenderer : MonoBehaviour
         mat = renderer.material;
         mat.shader = shader;
         mat.SetTexture("_Volume", tex);
+        mat.SetFloat("_Depth", Depth);
 
 
-
+        //setup lookUpTable
+        lookUpProxy = new Texture2D(256, 1);
+        for (int i = 0; i < 256; i++)
+        {
+            
+            lookUpTable[i] = new Color(0.5f ,0.5f, 0, 1);
+            lookUpQuick[i / 32] = new Color(0.5f, 0.5f, 0, 1);
+        }
+        //lookUpTable[0] = new Color(0, 0, 0, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (enableLookUpQuick)
+        {
+            for (int i = 0; i < 256; i++)
+            {
+                lookUpTable[i] = lookUpQuick[i / 32];
+            }
+        }
+        lookUpProxy.SetPixels(lookUpTable, 0);
+        lookUpProxy.Apply();
+        mat.SetTexture("_Lookup", lookUpProxy);
     }
     public void OnPostRender()
     {
 
         //GL.LoadPixelMatrix();
         //GL.Viewport(new Rect(0, 0, Screen.width, Screen.height));
-        GL.Color(new Color(1f, 0.0f, 0.0f, 1f));
+        //GL.Color(new Color(1f, 0.0f, 0.0f, 1f));
         GL.Begin(GL.QUADS);
         mat.SetPass(0);
-        mat.SetFloat("_Depth", Depth);
         mat.SetMatrix("_Transform", TexturePosition.transform.localToWorldMatrix);
 
         for (int i = 0; i < Depth; i++)
