@@ -12,7 +12,8 @@ public class ParentToChild : MonoBehaviour
 	
 	void Update ()
     {
-	
+		if (Input.GetKey (KeyCode.Alpha4))
+			PrintLeaves ();
 	}
 
     public void AddPath(GameObject parent, GameObject child)
@@ -55,6 +56,53 @@ public class ParentToChild : MonoBehaviour
 
         }
     }
+
+	public void PrintLeaves()
+	{
+		Debug.Log ("Leaves:");
+
+		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in parentToChild)
+		{
+			GameObject parent = kvp.Key;
+
+			if (parent.GetComponent<SelectionBehavior> ().Leaf == true)
+				Debug.Log (parent.name);
+		}
+	}
+
+	public void CheckLeaves()
+	{
+		foreach (KeyValuePair<GameObject, List<GameObject>> kvp in parentToChild)
+		{
+			GameObject parent = kvp.Key;
+			List<GameObject> children = kvp.Value;
+
+			if(children.Count == 0)
+				parent.GetComponent<SelectionBehavior>().Leaf = true;
+		}
+
+		List<GameObject> menus = new List<GameObject> ();
+		List<GameObject> texts = new List<GameObject>();
+
+		foreach (KeyValuePair<GameObject, int> kvp in GameObject.Find("ReadXML").GetComponent<XMLReader>().layerMap)
+		{
+			GameObject g = kvp.Key;
+			bool leaf = g.GetComponent<SelectionBehavior> ().Leaf;
+
+			for (int i = 0; i < g.transform.childCount; i++)
+			{
+				GameObject child = g.transform.GetChild (i).gameObject;
+
+				//if (this.gameObject.name == "WhiteColor")
+				//	child.GetComponent<TextMesh>().color = Color.black;
+				//else
+				//	child.GetComponent<TextMesh>().color = Color.white;
+
+				if(leaf)
+					child.GetComponent<TextMesh>().color = Color.red;
+			}
+		}  
+	}
 
     /*public void assignLayers(GameObject root)
     {

@@ -44,10 +44,21 @@ public class ColorProperty : MonoBehaviour
 			{
 				GameObject child = g.transform.GetChild (i).gameObject;
 
-				if (this.gameObject.name == "WhiteColor")
-					child.GetComponent<TextMesh>().color = Color.black;
+				if(child.GetComponent<TextMesh>().color == Color.red || child.GetComponent<TextMesh>().color == Color.blue)
+				{
+					if(g.GetComponent<Renderer>().material.name.Contains("Red"))
+						child.GetComponent<TextMesh>().color = Color.blue;
+					else
+						child.GetComponent<TextMesh>().color = Color.red;
+				}
+
 				else
-					child.GetComponent<TextMesh>().color = Color.white;
+				{
+					if (this.gameObject.name == "WhiteColor")
+						child.GetComponent<TextMesh>().color = Color.black;
+					else
+						child.GetComponent<TextMesh>().color = Color.white;		
+				}
 			}
 		}     
     }

@@ -37,6 +37,7 @@ public class CopyToMenu : MonoBehaviour {
 			this.gameObject.transform.SetParent (collide.gameObject.transform);
 			this.gameObject.transform.tag = "MenuItem";
 			this.gameObject.layer = 0;
+			this.gameObject.transform.localScale = new Vector3 (1.14f, 1.14f, 1.14f);
 			//isCopy = false;
         }
     }

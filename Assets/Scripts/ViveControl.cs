@@ -86,7 +86,8 @@ public class ViveControl : MonoBehaviour
         }
 
 		// Render laser (for color picker)
-		else if (controller.GetPress (trigger) || (controller.GetPress(trigger)  && controller.GetPress(grip)))
+		//else if (controller.GetPress (trigger) || (controller.GetPress(trigger)  && controller.GetPress(grip)))
+		else if (controller.GetPress (trigger) && GameObject.Find("ColorPicker").GetComponent<ColorPickerPosition>().inView == true)
         {
             LineRenderer laser = GetComponent<LineRenderer>();
             Vector3[] laserPoints = new Vector3[2];
@@ -112,7 +113,7 @@ public class ViveControl : MonoBehaviour
 
                 if (hit.transform.tag == "Color")
                 {
-					controller.TriggerHapticPulse (5000);	//NOTE: make stronger
+					//controller.TriggerHapticPulse (5000);	//NOTE: make stronger
                     shrinkAll();
                     hit.transform.gameObject.GetComponent<ColorProperty>().Enlarge();
 					hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
@@ -130,6 +131,12 @@ public class ViveControl : MonoBehaviour
             hold = true;
         }
 
+		else if (controller.GetPress (trigger) && GameObject.Find("ColorPicker").GetComponent<ColorPickerPosition>().inView == false)
+		{
+			press = false;
+			hold = true;
+		}
+
         else
         {
             LineRenderer laser = GetComponent<LineRenderer>();
@@ -140,20 +147,6 @@ public class ViveControl : MonoBehaviour
 
         if (controller.GetPressUp(trigger))
         {
-            RaycastHit hit;
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
-            {
-                if (hit.transform.tag == "MenuItem")
-                {
-                    
-                }
-
-                if (hit.transform.tag == "Color")
-                {
-                    //hit.transform.GetComponent<ColorProperty>().ChangeMenuColors();
-                }
-            }
-
             hold = false;
             toChange = null;
             domCont = null;
@@ -181,6 +174,7 @@ public class ViveControl : MonoBehaviour
             timer -= Time.deltaTime;
 			if(timer < 0 && !timerStop && !collide.gameObject.GetComponent<CopyToMenu>().isCopy)
             {
+				collide.GetComponent<SelectionBehavior> ().HoverOff ();
                 GameObject copy = Instantiate(collide.gameObject);
                 copy.transform.name = collide.gameObject.name + "copy";
 				//NOTE: just needed to reset orig. shortcuts are now working properly
@@ -201,8 +195,11 @@ public class ViveControl : MonoBehaviour
 			if (controller.GetPressDown (trigger)) 
 			{
 				collide.gameObject.GetComponent<SelectionBehavior> ().turnOnMainMenu();
-				if(collide.gameObject.GetComponent<SelectionBehavior>() !=null)
+
+				if(collide.gameObject.GetComponent<SelectionBehavior>() != null)
+				{
 					collide.gameObject.GetComponent<SelectionBehavior>().Select();
+				}
 			}
 
 			//if (collide.transform.localScale == collide.gameObject.GetComponent<SelectionBehavior>().enlargedScale && controller.GetTouchDown (touchpad))
@@ -228,7 +225,7 @@ public class ViveControl : MonoBehaviour
 	}
 
 	// Safe to remove
-	void OnTriggerStayTest(Collider collide)
+	/*void OnTriggerStayTest(Collider collide)
 	{
 		if (collide.transform.tag == "MenuItem") 
 		{
@@ -253,7 +250,7 @@ public class ViveControl : MonoBehaviour
 				collide.transform.parent = transform;
 			}
 		}
-	}
+	}*/
 
 
 	void OnTriggerEnter(Collider collide)
@@ -261,6 +258,19 @@ public class ViveControl : MonoBehaviour
 		if (collide.transform.tag == "MenuItem" || collide.transform.tag == "Belt") 
 		{
 			controller.TriggerHapticPulse (3000);	//NOTE: make stronger
+
+			if (collide.transform.tag == "MenuItem")
+			{
+				collide.GetComponent<SelectionBehavior> ().HoverOn ();	
+			}
+		}
+	}
+
+	void OnTriggerExit(Collider collide)
+	{
+		if (collide.transform.tag == "MenuItem")
+		{
+			collide.GetComponent<SelectionBehavior> ().HoverOff ();	
 		}
 	}
 		

@@ -11,11 +11,11 @@ public class ClockHandMovement : MonoBehaviour
 	int prevMinute;
 	Vector3 originalPos;
 	Vector3 originalRot;
-	float amountRotated;
+	//float amountRotated;
 
 	void Start ()
 	{
-		amountRotated = 0;
+		//amountRotated = 0;
 		originalPos = this.transform.position;
 		originalRot = this.transform.localEulerAngles;
 		prevSecond = 0;
@@ -65,11 +65,11 @@ public class ClockHandMovement : MonoBehaviour
 			prevSecond = second;
 			this.transform.localEulerAngles = originalRot;
 			this.transform.position = originalPos;
-			//this.gameObject.transform.RotateAround (point, Vector3.back, second * 6);
-			this.gameObject.transform.RotateAround (point, -GameObject.Find("Middle").transform.forward, -amountRotated);
-			this.gameObject.transform.RotateAround (point, -GameObject.Find("Middle").transform.forward, second * 12);
+			this.gameObject.transform.RotateAround (point, Vector3.back, second * 6);
+			//this.gameObject.transform.RotateAround (point, -GameObject.Find("Middle").transform.forward, -amountRotated);
+			//this.gameObject.transform.RotateAround (point, -GameObject.Find("Middle").transform.forward, second * 12);
 			secondCalled = true;
-			amountRotated = second * 6;
+			//amountRotated = second * 6;
 		}
 	}
 

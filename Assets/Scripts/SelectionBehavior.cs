@@ -13,42 +13,78 @@ public class SelectionBehavior : MonoBehaviour
 	private GameObject Belt;
 	private GameObject rightH;
 
-	bool movePressed;
-	bool resizePressed;
 	bool MenuOnOff = true;
+	float origDist;
+
+	public bool resizeOn = false;
+	bool scale;
+	GameObject controller_left, controller_right;
+
+	public bool moveOn = false;
+	private bool translate;
+	private Vector3 startPos;
+
+	Material defaultMat;
+	public Material highlightMat;
+
+	bool isLeaf;
 
 	void Start ()
 	{
+		defaultMat = this.GetComponent<Renderer> ().material;
+		isLeaf = false;
 		rightH = GameObject.Find ("Controller (right)");
 		Sphere = GameObject.Find ("Sphere");
-		movePressed = false;
-		resizePressed = true;
 		layer = 0;
 		activated = false;
 		defaultScale = this.transform.localScale;
-		enlargedScale = 1.25f * defaultScale;
+		enlargedScale = 1.2f * defaultScale;
+		controller_left = GameObject.Find ("Controller (left)");
+		controller_right = GameObject.Find ("Controller (right)");
 	}
 
 	void Update ()
 	{
-		if (movePressed)
-		{
-			
+
+		if (orig.name == "Resize") {
+			if (resizeOn) {
+				this.GetComponent<Renderer> ().material = GameObject.Find ("GreenColor").transform.GetChild(1).GetComponent<Renderer>().material;
+			} else {
+				this.GetComponent<Renderer> ().material = GameObject.Find ("BlueColor").transform.GetChild(1).GetComponent<Renderer>().material;
+
+				scale = false;
+			}
+
+			if (resizeOn && ViveControl.press && ViveControl.toChange != null) {
+				origDist = Vector3.Distance (controller_left.transform.position, controller_right.transform.position);
+				scale = true;
+			}
+
+			if (scale && ViveControl.hold && ViveControl.toChange != null) {
+				float curDist = Vector3.Distance (controller_left.transform.position, controller_right.transform.position);
+				//if distance increase, up scale. if it decreases reduce scale
+				ViveControl.toChange.transform.localScale *= 1.0f + (curDist - origDist);
+				origDist = curDist;
+			}
+		}
+		if (orig.name == "Move") {
+			if (moveOn) {
+				this.GetComponent<Renderer> ().material = GameObject.Find ("GreenColor").transform.GetChild(1).GetComponent<Renderer>().material;
+			} else {
+				this.GetComponent<Renderer> ().material = GameObject.Find ("BlueColor").transform.GetChild(1).GetComponent<Renderer>().material;
+			}
+			if (moveOn && ViveControl.press && ViveControl.toChange != null && ViveControl.domCont != null) {
+				startPos = ViveControl.domCont.transform.position;
+			}
+		
+
+			if (moveOn && ViveControl.hold && ViveControl.toChange != null) {
+				Vector3 move = ViveControl.domCont.transform.position - startPos;
+				ViveControl.toChange.transform.position += move;
+				startPos = ViveControl.domCont.transform.position;
+			}
 		}
 
-		else
-		{
-			
-		}
-
-		if (resizePressed)
-		{
-
-		}
-
-		else
-		{
-		}
 	}
 
 	public bool Activated
@@ -61,12 +97,19 @@ public class SelectionBehavior : MonoBehaviour
 		get { return layer; }
 		set { layer = value; }
 	}
+
+	public bool Leaf
+	{
+		get { return isLeaf; }
+		set { isLeaf = value; }
+	}
 		
 	public void Select()
 	{
 		checkOtherLayers ();
 		//NOTE: This makes the object super small when it is applied to a shortcut on the toolbelt
 		//this.transform.localScale = enlargedScale;
+		//defaultMat = this.GetComponent<Renderer>().material;
 		activateNextLevel ();
 		activatePreviousLevels();
 	}
@@ -84,9 +127,13 @@ public class SelectionBehavior : MonoBehaviour
 
 			if(GameObject.Find("Plane").GetComponent<ParentToChild>().parentToChild.ContainsKey(g))
 			{
-				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains(orig))
+				if (!GameObject.Find ("Plane").GetComponent<ParentToChild> ().parentToChild [g].Contains (orig))
+				{
 					g.transform.localScale = defaultScale;
+					g.GetComponent<Renderer> ().material = defaultMat; 
+				}
 			}
+
 			g.transform.localScale = defaultScale;
 		}
 	}
@@ -132,7 +179,10 @@ public class SelectionBehavior : MonoBehaviour
 		// Perform "selection" on each object leading up to the current menu item being selected
 		while (stack.Count != 0) 
 		{
-			stack.Peek ().GetComponent<SelectionBehavior> ().checkOtherLayers ();
+			//stack.Peek ().GetComponent<SelectionBehavior> ().checkOtherLayers ();
+			GameObject blackColor = GameObject.Find ("BlackColor");
+			Material blackColorMat = blackColor.transform.GetChild (1).GetComponent<Renderer> ().material;
+			stack.Peek().GetComponent<Renderer> ().material = blackColorMat;
 			stack.Pop ().GetComponent<SelectionBehavior> ().activateNextLevel ();
 		}
 	}
@@ -147,18 +197,34 @@ public class SelectionBehavior : MonoBehaviour
 				UnityEditor.EditorApplication.isPlaying = false;
 				break;
 			case "Color Palette":
-				//GameObject.Find ("ColorPicker").transform.position = controllerPos + new Vector3 (0.15f, 0.3f, 0.2f);
-				//GameObject.Find ("ColorPicker").transform.position = GameObject.Find("Camera (head)").gameObject.transform.position + new Vector3 (0.2f, 0.2f, -0.5f);
-				GameObject.Find ("ColorPicker").transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position + new Vector3 (0f, 0f, -0.5f);
-				GameObject.Find ("ColorPicker").transform.LookAt (GameObject.Find ("Camera (head)").transform);
-				GameObject.Find ("ColorPicker").transform.Rotate (new Vector3 (0, 180, 0));
+				GameObject.Find ("ColorPicker").GetComponent<ColorPickerPosition>().toggle();
 				break;
-			/*case "Move":
-				movePressed = !movePressed;
+			case "Move":
+				moveOn = !moveOn;
+				if (this.gameObject.name == "Move" && GameObject.Find ("Movecopy") != null)
+				{
+					GameObject g = GameObject.Find ("Movecopy");
+					g.GetComponent<SelectionBehavior> ().moveOn = moveOn;
+				}
+
+				else if(this.gameObject.name == "Movecopy")
+				{
+					orig.GetComponent<SelectionBehavior> ().moveOn = moveOn;
+				}
 				break;
 			case "Resize":
-				resizePressed = !resizePressed;
-				break;*/
+				resizeOn = !resizeOn;
+				if (this.gameObject.name == "Resize" && GameObject.Find ("Resizecopy") != null)
+				{
+					GameObject g = GameObject.Find ("Resizecopy");
+					g.GetComponent<SelectionBehavior> ().resizeOn = resizeOn;
+				}
+
+				else if(this.gameObject.name == "Resizecopy")
+				{
+					orig.GetComponent<SelectionBehavior> ().resizeOn = resizeOn;
+				}
+				break;
 			case "MaxMinMenu":
 				MenuOnOff = !MenuOnOff;
 				Sphere.gameObject.SetActive (MenuOnOff);
@@ -177,6 +243,7 @@ public class SelectionBehavior : MonoBehaviour
 				SceneManager.LoadScene (0);
 				break;
 			default:
+			
 				break;
 		}
 	}
@@ -185,20 +252,36 @@ public class SelectionBehavior : MonoBehaviour
 		Sphere.gameObject.SetActive (true);
 
 	}
+
 	public void resetBelt()
 	{
 		Belt.transform.position = Vector3.zero;
-		for (int i = 0; i < Belt.transform.childCount; i++) {
+
+		for (int i = 0; i < Belt.transform.childCount; i++)
+		{
 			Belt.transform.GetChild (i).transform.localPosition = Vector3.zero;
 		}
 		rightH.transform.gameObject.GetComponent<InstantiateBeltLength> ().enabled = true;
 		rightH.transform.gameObject.GetComponent<InstantiateBeltLength> ().startMess.SetActive (true);
 		Belt.transform.gameObject.GetComponent<menuMove> ().offset = Vector3.zero;
 		Belt.SetActive (false);
-
-
-
 	}
+
+	public void HoverOn()
+	{
+		this.transform.localScale = enlargedScale;
+	}
+
+	public void HoverOff()
+	{
+		this.transform.localScale = defaultScale;
+	}
+
+	public void HoverDrag()
+	{
+		this.transform.localScale = this.transform.parent.localScale * 1.2f;
+	}
+
 	/*public void incrLevel(GameObject parent)
     {
 		if (parent.transform.name == "Top")

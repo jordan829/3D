@@ -55,6 +55,7 @@ public class XMLReader : MonoBehaviour
         parseXML(reader);
         randomPlace();
 		GameObject.Find("Top").GetComponent<MenuSetup>().setUp();
+		ptc.CheckLeaves ();
 	}
 	
 	void Update ()
