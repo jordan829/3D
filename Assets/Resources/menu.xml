@@ -4,6 +4,7 @@
     <title>Main Menu</title>
     <folder>
     	<title>Programs</title>
+    	<folder><title>Instructions</title></folder>
     	<folder><title>Music</title> </folder>
     	<folder><title>Photos</title> </folder>
     	<folder><title>Internet</title> </folder>
@@ -51,7 +52,7 @@
     	<folder>
     		<title>Widgets</title>
     		<folder><title>Color Palette</title> </folder>
-    		<folder><title>Widget 2</title> </folder>
+    		<folder><title>Color Menu</title> </folder>
     		<folder><title>Widget 3</title> </folder>
     	</folder>
     </folder>

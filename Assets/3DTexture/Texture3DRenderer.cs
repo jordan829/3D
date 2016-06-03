@@ -24,6 +24,14 @@ public class Texture3DRenderer : MonoBehaviour
     public Color[] lookUpQuick = new Color[8];
     public bool enableLookUpQuick = true;
     Texture2D lookUpProxy;
+	public GameObject color1;
+	public GameObject color2;
+	public GameObject color3;
+	public GameObject color4;
+	public GameObject color5;
+	public GameObject color6;
+	public GameObject color7;
+	public GameObject color8;
 
     // Use this for initialization
     void Start()
@@ -132,15 +140,39 @@ public class Texture3DRenderer : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
+	{
         if (enableLookUpQuick)
         {
+			if (color1 != null && color1.activeInHierarchy) {
+				lookUpQuick [0] = color1.GetComponent<Renderer> ().material.color;
+			}
+			if (color2 != null && color2.activeInHierarchy) {
+				lookUpQuick [1] = color2.GetComponent<Renderer> ().material.color;
+			}
+			if (color3 != null && color3.activeInHierarchy) {
+				lookUpQuick [2] = color3.GetComponent<Renderer> ().material.color;
+			}
+			if (color4 != null && color4.activeInHierarchy) {
+				lookUpQuick [3] = color4.GetComponent<Renderer> ().material.color;
+			}
+			if (color5 != null && color5.activeInHierarchy) {
+				lookUpQuick [4] = color5.GetComponent<Renderer> ().material.color;
+			}
+			if (color6 != null && color6.activeInHierarchy) {
+				lookUpQuick [5] = color6.GetComponent<Renderer> ().material.color;
+			}
+			if (color7 != null && color7.activeInHierarchy) {
+				lookUpQuick [6] = color7.GetComponent<Renderer> ().material.color;
+			}
+			if (color8 != null && color8.activeInHierarchy) {
+				lookUpQuick [7] = color8.GetComponent<Renderer> ().material.color;
+			}
             for (int i = 0; i < 256; i++)
             {
                 lookUpTable[i] = lookUpQuick[i / 32];
             }
-        }
-        lookUpProxy.SetPixels(lookUpTable, 0);
+		}
+		lookUpProxy.SetPixels(lookUpTable, 0);
         lookUpProxy.Apply();
         mat.SetTexture("_Lookup", lookUpProxy);
     }

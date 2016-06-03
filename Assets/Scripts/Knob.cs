@@ -49,7 +49,7 @@ public class Knob : MonoBehaviour {
 		}
 		t = t / 360.0f;
 		//Debug.Log(knobHand.transform.position);
-        Debug.Log(t);
+        //Debug.Log(t);
         value = (1 - t) * min + t * max;
         valueText.GetComponent<TextMesh>().text = value.ToString();
         

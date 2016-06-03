@@ -49,10 +49,11 @@ public class TestColorControllerScript : MonoBehaviour {
 
 	void OnTriggerStay(Collider other) {
 		if (other.gameObject.layer == 10 && pressed) {
-			if (other.gameObject.name.Equals ("ColorBox")) {
+			if (other.gameObject.name.Equals ("ColorPicker")) {
 				other.gameObject.GetComponent<ColorPickerBehavior> ().DoAction (transform.position);
 			} 
 			else {
+				
 				other.gameObject.GetComponent<SelectColorBehavior> ().DoAction ();
 			}
 		}

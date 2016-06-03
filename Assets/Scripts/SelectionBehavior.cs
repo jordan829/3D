@@ -12,6 +12,7 @@ public class SelectionBehavior : MonoBehaviour
 	private GameObject Sphere;
 	private GameObject Belt;
 	private GameObject rightH;
+	private GameObject ColorMenu;
 
 	bool MenuOnOff = true;
 	float origDist;
@@ -41,6 +42,7 @@ public class SelectionBehavior : MonoBehaviour
 		enlargedScale = 1.2f * defaultScale;
 		controller_left = GameObject.Find ("Controller (left)");
 		controller_right = GameObject.Find ("Controller (right)");
+		ColorMenu = GameObject.Find ("ColorMenu");
 	}
 
 	void Update ()
@@ -199,6 +201,15 @@ public class SelectionBehavior : MonoBehaviour
 			case "Color Palette":
 				GameObject.Find ("ColorPicker").GetComponent<ColorPickerPosition>().toggle();
 				break;
+			case "Color Menu":
+				ColorMenu.GetComponent<Renderer> ().enabled = !ColorMenu.GetComponent<Renderer> ().enabled;
+				for (int i = 0; i < ColorMenu.transform.childCount; i++) {
+					ColorMenu.transform.GetChild (i).GetComponent<Renderer> ().enabled = !ColorMenu.transform.GetChild (i).GetComponent<Renderer> ().enabled;
+					for (int j = 0; j < ColorMenu.transform.GetChild (i).childCount; j++) {
+						ColorMenu.transform.GetChild (i).GetChild (j).GetComponent<Renderer> ().enabled = !ColorMenu.transform.GetChild (i).GetChild (j).GetComponent<Renderer> ().enabled;
+					}
+				}
+				break;
 			case "Move":
 				moveOn = !moveOn;
 				if (this.gameObject.name == "Move" && GameObject.Find ("Movecopy") != null)
@@ -235,15 +246,22 @@ public class SelectionBehavior : MonoBehaviour
 				resetBelt();
 				break;
 			case "Time":
-				GameObject.Find ("Clock").transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position + new Vector3 (-0.25f, -0.25f, -0.5f);
+				GameObject.Find ("Clock").transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position + new Vector3 (-0.05f, -0.05f, -0.0f);
 				GameObject.Find ("Clock").transform.LookAt (GameObject.Find ("Camera (head)").transform);
 				GameObject.Find ("Clock").transform.Rotate (new Vector3 (0, 180, 0));
 				break;
 			case "Restart":
 				SceneManager.LoadScene (0);
 				break;
+			case "Instructions":
+				GameObject g1 = GameObject.Find ("InstructionSet");
+				g1.GetComponent<Renderer> ().enabled = !g1.GetComponent<Renderer> ().enabled;
+				g1.transform.GetChild (0).GetComponent<Renderer> ().enabled = !g1.transform.GetChild (0).GetComponent<Renderer> ().enabled;
+				g1.transform.position = GameObject.Find ("Camera (head)").gameObject.transform.position
+				+ GameObject.Find ("Camera (head)").gameObject.transform.forward * 0.5f;
+				g1.transform.LookAt (GameObject.Find ("Camera (head)").transform);
+				break;
 			default:
-			
 				break;
 		}
 	}
